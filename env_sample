@@ -1,0 +1,6 @@
+# MySQL database connection information
+
+DB_HOST=
+DB_NAME=
+DB_USER=
+DB_PASS=
