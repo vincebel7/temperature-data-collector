@@ -18,7 +18,8 @@ Then I'll be able to populate the database with live temperature data!
 
 -Ubuntu server to run the web server and database on
 
-TODO:
+## TODO:
+
 -Add Arduino code here
 
 -deploy Arduino code from setup script? Board setup via wifi?
