@@ -7,20 +7,7 @@
 <div id="databox"></div>
 
 <script>
-
 	var socket = io('http://app01.vincebel.tech:8080');
-
-	/**
-	socket.on('greeting-from-server', function (message) {
-		document.body.appendChild(
-			document.createTextNode(message.greeting)
-		);
-		socket.emit('greeting-from-client', {
-			greeting: 'Hello Server'
-		});
-		
-	});
-	**/
 
 	socket.on('data-from-server', function (data) {
 		var str_data = JSON.stringify(data);
@@ -58,5 +45,4 @@
 	}};
 
 	polldb();
-
 </script>

@@ -38,18 +38,8 @@ app.get('/', function (req, res) {
 // Serve CSS, etc
 app.use(express.static('public')); 
 
+// On connection
 io.on('connection', function (socket) {
-	/**
-	socket.emit('greeting-from-server', {
-		greeting: 'Hello Client'
-	});
-
-	socket.on('greeting-from-client', function (message) {
-		console.log(message);
-	});
-
-	**/
-
 	socket.on('poll-db', function (message) {
         	console.log("Fetching data...");
 		con.query("SELECT * FROM dht11_data ORDER BY date DESC LIMIT 1", (err, result, field)=>{
