@@ -1,0 +1,6 @@
+# MySQL database connection information
+
+DB_HOST=localhost
+DB_NAME=sensordata
+DB_USER=dht11
+DB_PASS=password
