@@ -1,4 +1,62 @@
+<link href="/css/style.css" rel="stylesheet" type="text/css">
 <script src="https://cdn.socket.io/4.4.0/socket.io.min.js" integrity="sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj" crossorigin="anonymous"></script>
-	<script>
-		var socket = io();
-	</script>
+
+<h1>DHT11-01 Sensor Readings</h1>
+<a href="https://vincebel.tech">vincebel.tech</a>
+<hr>
+<div id="databox"></div>
+
+<script>
+
+	var socket = io('http://app01.vincebel.tech:8080');
+
+	/**
+	socket.on('greeting-from-server', function (message) {
+		document.body.appendChild(
+			document.createTextNode(message.greeting)
+		);
+		socket.emit('greeting-from-client', {
+			greeting: 'Hello Server'
+		});
+		
+	});
+	**/
+
+	socket.on('data-from-server', function (data) {
+		var str_data = JSON.stringify(data);
+		var json_data = JSON.parse(str_data);
+		var id = json_data.data[0].ip;
+		var temperature = json_data.data[0].temperature;
+		var humidity = json_data.data[0].humidity;
+		var loc = json_data.data[0].location;
+		var sensor = json_data.data[0].sensor;
+		var dt = json_data.data[0].date;
+		var ip = json_data.data[0].ip;
+
+		const options = {
+			hour12: true,
+			hour: "2-digit",
+			minute: "2-digit",
+			second: "2-digit"
+		};
+
+		var newtime = new Date(dt).toLocaleTimeString("en-US",options);;
+
+		var message = newtime + ": TEMPERATURE " + temperature + ", HUMIDITY " + humidity;
+		var dataDiv = document.getElementById('databox');
+
+		dataDiv.appendChild( document.createElement("br") );
+		dataDiv.appendChild( document.createTextNode(message) );
+		dataDiv.scrollTop = dataDiv.scrollHeight;
+	});
+
+	var polldb = async function () { while (true) {
+		socket.emit('poll-db', {});
+
+	  	// Wait 1 second
+	  	await new Promise(resolve => setTimeout(resolve, 1000));
+	}};
+
+	polldb();
+
+</script>

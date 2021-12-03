@@ -1,11 +1,6 @@
-require("dotenv").config() 
-const http = require('http')
-const port = 8080
+require("dotenv").config()
 
-var express = require('express');
-var app = express();
-var io = require('socket.io')(http);
-
+// MySQL
 var mysql = require('mysql')
 const DB_HOST = process.env.DB_HOST;
 const DB_USER = process.env.DB_USER;
@@ -19,34 +14,51 @@ var con = mysql.createConnection({
 	database: DB_NAME
 });
 
-function get_data(){
-	console.log("Fetching data...");
-
-	con.query("SELECT * FROM dht11_data ORDER BY date DESC LIMIT 1", (err, result, field)=>{
-		if (err) throw err;
-		console.log(result);
-	});
-}
-
 con.connect(function(err) {
 	if (err) throw err;
 	console.log("Connected to MySQL");
 });
 
+// Web server
+var http = require('http');
+var express = require('express');
+var app = express();
+
+var server = http.createServer(app);
+var io = require('socket.io')(server);
+
+
+server.listen(8080);
 
 app.get('/', function (req, res) {
-	res.sendFile(__dirname + '/index.html');
+	console.log("New client");
+	res.sendFile(__dirname + "/index.html");
 });
 
-io.on('connection', function(socket) {
-	console.log("connected");
+// Serve CSS, etc
+app.use(express.static('public')); 
+
+io.on('connection', function (socket) {
+	/**
+	socket.emit('greeting-from-server', {
+		greeting: 'Hello Client'
+	});
+
+	socket.on('greeting-from-client', function (message) {
+		console.log(message);
+	});
+
+	**/
+
+	socket.on('poll-db', function (message) {
+        	console.log("Fetching data...");
+		con.query("SELECT * FROM dht11_data ORDER BY date DESC LIMIT 1", (err, result, field)=>{
+			if (err) throw err;
+			console.log(result);
+
+			socket.emit('data-from-server', {
+				data: result
+			});
+		});
+	});
 });
-
-var server = app.listen(8080, function () {
-	var host = server.address().address
-	var port = server.address().port
-
-	console.log("Server is listening on port " + port)
-
-    	//setInterval(get_data,1000)
-})
