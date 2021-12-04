@@ -1,6 +1,6 @@
 # MySQL database connection information
 
-DB_HOST=
-DB_NAME=
-DB_USER=
-DB_PASS=
+DB_HOST=localhost
+DB_NAME=sensordata
+DB_USER=root
+DB_PASS=v3ry_secur3_pw

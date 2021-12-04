@@ -43,4 +43,6 @@ CREATE TABLE `dht11_data` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+ALTER USER 'root' IDENTIFIED WITH mysql_native_password BY 'sup3r_secur3_pw'; flush privileges;
+
 -- Dump completed on 2021-12-03 18:58:34

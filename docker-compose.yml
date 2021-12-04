@@ -1,0 +1,32 @@
+version: '3'
+services:
+  db:
+    image: mysql
+    restart: always
+    #build: ./db
+    cap_add:
+      - SYS_NICE
+    volumes:
+      - "./sensordump.sql:/docker-entrypoint-initdb.d/sensordump.sql"
+    ports:
+      - "3306:3306"
+    env_file: ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      MYSQL_DATABASE: sensordata
+  web:
+    build: ./web
+    env_file:
+     - ./.env
+    environment:
+      MYSQL_DATABASE: sensordata
+      MYSQL_USER: root
+      MYSQL_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      MYSQL_HOST: localhost
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+    restart: on-failure
