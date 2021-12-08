@@ -1,26 +1,6 @@
 require("dotenv").config()
 
 // MySQL
-var mysql = require('mysql')
-const DB_HOST = process.env.DB_HOST;
-const DB_USER = process.env.DB_USER;
-const DB_PASS = process.env.DB_PASS;
-const DB_NAME = process.env.DB_NAME;
-var con = mysql.createConnection({
-	host: DB_HOST,
-	user: DB_USER,
-	password: DB_PASS,
-	database: DB_NAME
-});
-
-console.log("HOST: " + DB_HOST);
-console.log("USER: " + DB_USER);
-console.log("PASS: " + DB_PASS);
-console.log("NAME: " + DB_NAME);
-con.connect(function(err) {
-	if (err) throw err;
-	console.log("Connected to MySQL");
-});
 
 // Web server
 var http = require('http');
@@ -32,6 +12,7 @@ var io = require('socket.io')(server);
 
 
 server.listen(8080);
+console.log("Listening on 8080");
 
 app.get('/', function (req, res) {
 	console.log("New client");
@@ -46,13 +27,13 @@ app.use(express.static('public'));
 io.on('connection', function (socket) {
 	socket.on('poll-db', function (message) {
         	console.log("Fetching data...");
-		con.query("SELECT * FROM dht11_data ORDER BY date DESC LIMIT 1", (err, result, field)=>{
-			if (err) throw err;
+		//con.query("SELECT * FROM dht11_data ORDER BY date DESC LIMIT 1", (err, result, field)=>{
+		//	if (err) throw err;
 			socket.emit('data-from-server', {
-				data: result
+		//		data: result
 			});
 			console.log("Emitted data");
-		});
+		//});
 	});
 });
 

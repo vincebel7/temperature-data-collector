@@ -1,6 +1,8 @@
-# MySQL database connection information
-
+# Optional MySQL database connection information
 DB_HOST=localhost
 DB_NAME=sensordata
 DB_USER=root
 DB_PASS=v3ry_secur3_pw
+
+# Redis
+REDIS_CONN_STRING=

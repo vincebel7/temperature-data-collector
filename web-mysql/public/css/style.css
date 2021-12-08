@@ -1,0 +1,12 @@
+h1 {
+	color: red;
+	font-family: Verdana;
+}
+#databox{
+	background-color: #e6d6d6;
+	height: 800px;
+	max-width: 1000px;
+	overflow: scroll;
+	overflow-x: hidden;
+	font-family: Courier;
+}

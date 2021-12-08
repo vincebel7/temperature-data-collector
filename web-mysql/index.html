@@ -1,13 +1,13 @@
 <link href="/css/style.css" rel="stylesheet" type="text/css">
 <script src="https://cdn.socket.io/4.4.0/socket.io.min.js" integrity="sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj" crossorigin="anonymous"></script>
 
-<h1>DHT Sensor Readings</h1>
+<h1>DHT11-01 Sensor Readings</h1>
 <a href="https://vincebel.tech">vincebel.tech</a>
 <hr>
 <div id="databox"></div>
 
 <script>
-	var socket = io('localhost:8080');
+	var socket = io('http://app01.vincebel.tech:8080');
 
 	socket.on('data-from-server', function (data) {
 		var str_data = JSON.stringify(data);
