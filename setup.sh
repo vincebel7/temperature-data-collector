@@ -20,4 +20,4 @@ cp env_sample .env # Remember to replace .envtest with .env when ready
 PASS="testpass"
 
 #sed -i "s/DB_PASS=/DB_PASS="${PASS}"/g" .env
-export DB_HOST=
+#export DB_HOST=

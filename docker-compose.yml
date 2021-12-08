@@ -1,5 +1,9 @@
 version: '3'
 services:
+  #collector:
+    #build: ./collector
+    #env_file:
+      #- ./.env
   web:
     build: ./web
     env_file:

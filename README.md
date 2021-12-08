@@ -7,7 +7,7 @@ Then I'll be able to populate the database with live temperature data!
 
 Docker containers to be included:
 
-- Sensor processing
+- Sensor collector
 
 - Redis
 
@@ -51,6 +51,8 @@ OR
 - finish setup script
 
 - finish .env and docker-compose
+
+- Python collector - store in Redis
 
 - write new Orange Pi Python library for DHT11 and DHT22 support
 
