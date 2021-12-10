@@ -1,3 +1,5 @@
+// Old webserver with MySQL link, may need this for reference
+
 require("dotenv").config()
 
 // MySQL
