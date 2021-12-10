@@ -14,7 +14,8 @@ def insert_redis(result):
 #read data using pin port.PA6
 def read_sensor():
     instance = dht.DHT(pin=PIN2)
-    result = instance.read_pin()
+    response = instance.read_pin()
+    print(response.temperature)
     #print(str(result.temperature) + " " + str(result.humidity))
    # if result.is_valid():
    #     print("Temperature: %.2f" % result.temperature)
