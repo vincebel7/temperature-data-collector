@@ -1,10 +1,12 @@
 version: '3'
 services:
-  #collector:
-    #build: ./collector
+  collector:
+    container_name: collector
+    build: ./collector
     #env_file:
       #- ./.env
   web:
+    container_name: web
     build: ./web
     env_file:
      - ./.env
@@ -17,6 +19,7 @@ services:
     tty: true
     restart: on-failure
   redis:
+    container_name: redis
     build: ./redis
     network_mode: host
   #db-writer:

@@ -14,6 +14,8 @@ COPY . .
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+RUN pip install -r requirements.txt
+
 #EXPOSE 8080
 
 CMD ["python3", "collector.py"]

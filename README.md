@@ -1,13 +1,13 @@
-# DHT-display-server
-An application to log and display humidity and temperature data from a digital temperature and humidity sensor (DHT)
+# temperature-data-collector
+An application intended for a custom-built IoT device, to collect, process, and display temperature and humidity data from a digital temperature and humidity sensor (DHT)
 
-Utilize this library: https://github.com/ChuckBell/MySQL_Connector_Arduino
-
-Then I'll be able to populate the database with live temperature data!
+This is an all-in-one project including collectors for various hardware platforms, a Redis server, a MySQL exporter, and a web server to monitor live data.
 
 Docker containers to be included:
 
-- Sensor collector
+- Pi sensor collector
+
+- Arduino sensor collector
 
 - Redis
 
@@ -34,6 +34,8 @@ OR
 
 - [DHT22 sensor](https://www.adafruit.com/product/385)
 
+	- Recommended. DHT22s are much more accurate, for only a tiny bit more.
+
 ### Miscellaneous
 
 - Breadboard
@@ -54,6 +56,8 @@ OR
 
 - Python collector - store in Redis
 
-- write new Orange Pi Python library for DHT11 and DHT22 support
+- finish new Orange Pi Python library for DHT11 and DHT22 support
 
 - Dockerize Redis
+
+Note: For Arduino+MySQL, utilize this library: https://github.com/ChuckBell/MySQL_Connector_Arduino
