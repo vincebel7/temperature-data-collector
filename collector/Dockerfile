@@ -1,4 +1,5 @@
-FROM python:3.8-slim-buster
+#FROM python:3.8-slim-buster
+FROM python
 
 MAINTAINER vincebel version: 0.1
 

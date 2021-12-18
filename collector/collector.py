@@ -10,6 +10,12 @@ gpio.init()
 
 instance = dht.DHTSensor(pin=PIN2)
 
+# Redis
+r = redis.Redis(
+        host='localhost',
+        port='',
+        password='password')
+
 def insert_redis(result):
     print("Adding to redis...")
 
