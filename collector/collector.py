@@ -8,22 +8,23 @@ from pyA20.gpio import port
 PIN2 = port.PA6
 gpio.init()
 
+instance = dht.DHTSensor(pin=PIN2)
+
 def insert_redis(result):
     print("Adding to redis...")
 
 #read data using pin port.PA6
 def read_sensor():
-    instance = dht.DHTSensor(pin=PIN2)
     response = instance.read_pin()
+
     #print(response.temperature)
-    #print(str(result.temperature) + " " + str(result.humidity))
     if response.error_code == 0:
         #print("Temperature: %.2f" % response.temperature)
-        print(response.temperature)
-   #     print("Humidity: %.2f" % result.humidity)
+        print("Temp: " + str(response.temperature))
+        print("Humidity: " + str(response.humidity))
    #     insert_redis(result)
-    #else:
-    #    print("Error: %d" % result.error_code)
+    else:
+        print("Error: %d" % response.error_code)
 
 while True:
     read_sensor()

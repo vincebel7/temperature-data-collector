@@ -13,7 +13,7 @@ class DHTResponse:
 
         def __init__(self, temperature, humidity, error_code):
             self.temperature = temperature
-            self.humnidity = humidity
+            self.humidity = humidity
             self.error_code = error_code
 
         def __get_error_code(self):
@@ -27,13 +27,18 @@ class DHTResponse:
             if code == 2:
                 return "Bad data"
             if code == 3:
-                return ""
+                return "Invalid checksum"
 
 class DHTSensor:
     __pin = -1
 
-    def __init__(self, pin):
+    def __init__(self, pin, sensor="DHT22"):
         self.__pin = pin
+
+        if sensor in ["DHT11", "DHT22"]:
+            self.__sensor = sensor
+        else:
+            raise ValueError("Invalid sensor model")
 
     def read_pin(self):
 
@@ -41,13 +46,14 @@ class DHTSensor:
         gpio.setcfg(self.__pin, gpio.OUTPUT)
 
         gpio.output(self.__pin, 1)
-        time.sleep(0.03) # 50 msec
+        time.sleep(0.05) # 50 msec
 
         gpio.output(self.__pin, 0)
-        time.sleep(0.03) # 20 msec
+        time.sleep(0.02) # 20 msec
 
         # switch to input for listening
         gpio.setcfg(self.__pin, gpio.INPUT)
+        gpio.pullup(self.__pin, gpio.PULLUP)
 
         raw_input = self.__input_listen()
         
@@ -61,21 +67,22 @@ class DHTSensor:
         
         # Period length validation
         if len(period_lengths) == 0:
-            response = DHTResponse(0, 0, 1)
-            print(DHTResponse.get_error_text(response.error_code))
-            return(response)
+            return DHTResponse(0, 0, 1)
 
         elif len(period_lengths) != 40:
-            response = DHTResponse(0, 0, 2)
-            print(DHTResponse.get_error_text(response.error_code))
-            return(response)
+            return DHTResponse(0, 0, 2)
 
-        print(period_lengths)
+        bits = self.__data_to_bits(period_lengths)
+        mybytes = self.__bits_to_bytes(bits)
+        checksum = self.__checksum(mybytes)
 
-        bits = self.__convert_to_bits(period_lengths)
-        
-        response = DHTResponse(bits, 0, 0)
-        return(response)
+        if self.__sensor == "DHT22":
+            mybytes = self.__dht22_compute(mybytes)
+
+        if mybytes[4] != checksum:
+            return DHTResponse(0, 0, 3)
+
+        return DHTResponse(mybytes[2], mybytes[0], 0)
 
     def __input_listen(self):
         # input
@@ -127,9 +134,61 @@ class DHTSensor:
 
         return periods
 
-    def __convert_to_bits(self, data):
+    def __data_to_bits(self, data):
+        bits = []
+        shortest = 1000
+        longest = 0
+
+        for i in range(0, len(data)):
+            length = data[i]
+            if length < shortest:
+                shortest = length
+            if length > longest:
+                longest = length
+
+        halfway = shortest + (longest - shortest) / 2
         bits = []
 
-        # TODO: Use lengths of periods to calculate 0 or 1
+        for i in range(0, len(data)):
+            bit = False
+            if data[i] > halfway:
+                bit = True
+            bits.append(bit)
 
         return bits
+
+    def __bits_to_bytes(self, bits):
+        mybytes = []
+        byte = 0
+
+        for i in range(0, len(bits)):
+            byte = byte << 1
+            if(bits[i]):
+                byte = byte | 1
+            else:
+                byte = byte | 0
+            
+            if((i+1) % 8 == 0):
+                mybytes.append(byte)
+                byte = 0
+
+        return mybytes
+
+    def __checksum(self, mybytes):
+        return mybytes[0] + mybytes[1] + mybytes[2] + mybytes[3] & 255
+
+    def __dht22_compute(self, mybytes):
+        c = (float)(((mybytes[2] & 0x7F) << 8) + mybytes[3]) / 10
+
+        if c > 125:
+            c = mybytes[2]
+
+        if mybytes[2] & 0x80:
+            c = -c
+
+        dht22_bytes = mybytes
+
+        dht22_bytes[2] = c
+        dht22_bytes[0] = ((mybytes[0] << 8) + mybytes[1]) / 10
+
+        return dht22_bytes
