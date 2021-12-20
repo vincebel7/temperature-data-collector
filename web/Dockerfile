@@ -1,4 +1,4 @@
-FROM node
+FROM node:10.19.0
 
 MAINTAINER vincebel version: 0.1
 

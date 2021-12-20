@@ -5,9 +5,15 @@ This is an all-in-one project including collectors for various hardware platform
 
 Docker containers to be included:
 
+### Client:
+
 - Pi sensor collector
 
 - Arduino sensor collector
+
+### Server:
+
+- MQTT listener/subscriber
 
 - Redis
 
@@ -44,20 +50,44 @@ OR
 
 - 10k ohm resistor (pull-up)
 
+
+## Process:
+
+There are two components: Client, and Server.
+
+Client is the code in the collector directory. This can be run as a docker container or standalone, on each of the nodes.
+
+Server is everything else (web, redis, etc) and can be run via docker-compose (or each component standalone).
+
+The plan is for the client to send data via MQTT to the listener on the server, which will then add to redis and store to the permanent database. The web server will read from redis.
+
+Focusing on development for the Orange Pi Zero first, due to hardware availability.
+
+
 ## TODO:
 
-- Clean up and add Arduino code
+For V1:
 
-- deploy Arduino code from setup script? Board setup via wifi?
+- Verify DHT python library is complete (both DHT11 and DHT22 support)
+
+- Separate client and server containers, build collector successfully on Orange Pi
+
+- MQTT functionality
+
+- Dockerize Redis
+
+- Basic Collector -> Listener -> Redis -> web server functionality
+
+- finish setup script
 
 - finish setup script
 
 - finish .env and docker-compose
 
-- Python collector - store in Redis
+For V2:
 
-- finish new Orange Pi Python library for DHT11 and DHT22 support
+- Clean up and add Arduino code
 
-- Dockerize Redis
+- deploy Arduino code from setup script? Board setup via wifi?
 
 Note: For Arduino+MySQL, utilize this library: https://github.com/ChuckBell/MySQL_Connector_Arduino

@@ -1,10 +1,10 @@
 version: '3'
 services:
-  collector:
-    container_name: collector
-    build: ./collector
-    #env_file:
-      #- ./.env
+ #collector:
+   #container_name: collector
+   #build: ./collector
+   #env_file:
+     #- ./.env
   web:
     container_name: web
     build: ./web
@@ -23,3 +23,7 @@ services:
     build: ./redis
     network_mode: host
   #db-writer:
+  mqtt-listener:
+    container_name: mqtt-listener
+    build: ./mqtt-listener
+    network_mode: host
