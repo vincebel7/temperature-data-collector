@@ -82,6 +82,7 @@ class DHTSensor:
         if mybytes[4] != checksum:
             return DHTResponse(0, 0, 3)
 
+        #return DHTResponse(self.temp_c_to_f(mybytes[2]), mybytes[0], 0)
         return DHTResponse(mybytes[2], mybytes[0], 0)
 
     def __input_listen(self):
@@ -192,3 +193,6 @@ class DHTSensor:
         dht22_bytes[0] = ((mybytes[0] << 8) + mybytes[1]) / 10
 
         return dht22_bytes
+
+    def temp_c_to_f(self, celsius):
+        return((celsius * 1.8) + 32)

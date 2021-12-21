@@ -51,24 +51,49 @@ OR
 - 10k ohm resistor (pull-up)
 
 
+### Circuit diagram
+
+![DHT circuit](dht-circuit.jpg)
+
 ## Process:
 
 There are two components: Client, and Server.
 
-Client is the code in the collector directory. This can be run as a docker container or standalone, on each of the nodes.
+Client is the code in the collector directory. This can only run standalone for now, Docker support hopefully coming soon.
 
 Server is everything else (web, redis, etc) and can be run via docker-compose (or each component standalone).
 
-The plan is for the client to send data via MQTT to the listener on the server, which will then add to redis and store to the permanent database. The web server will read from redis.
+The plan is for the client(s) to send data via MQTT to the listener on the server, which will then add to redis and store to the permanent database. The web server will read from redis.
 
 Focusing on development for the Orange Pi Zero first, due to hardware availability.
+
+
+## Getting Started
+
+This system is still in development. Some things may not work.
+
+Client:
+
+1. Build the circuit in the "Circuit diagram" section above, with a 10k ohm resistor, DHT sensor, and Orange Pi. Have the data pin going to the proper GPIO port (the collector defaults to PA6)
+
+2. On the Orange Pi, clone this repository and run collector/collector.py. Edit the script if you would like to change the sensor model, GPIO port, sample rate, etc.
+
+3. You should get temperature and humidity values as output. Once the server component is complete, this data will be published via MQTT.
+
+Server:
+
+1. Clone this repository on your server.
+
+2. Ensure the following ports are open: ?
+
+3. Run `docker-compose up --build`
+
+4. Hold tight! Still in development
 
 
 ## TODO:
 
 For V1:
-
-- Verify DHT python library is complete (both DHT11 and DHT22 support)
 
 - Separate client and server containers, build collector successfully on Orange Pi
 
@@ -77,8 +102,6 @@ For V1:
 - Dockerize Redis
 
 - Basic Collector -> Listener -> Redis -> web server functionality
-
-- finish setup script
 
 - finish setup script
 

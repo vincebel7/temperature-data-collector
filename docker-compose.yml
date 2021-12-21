@@ -1,10 +1,5 @@
 version: '3'
 services:
- #collector:
-   #container_name: collector
-   #build: ./collector
-   #env_file:
-     #- ./.env
   web:
     container_name: web
     build: ./web

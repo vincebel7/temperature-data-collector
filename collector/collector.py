@@ -1,6 +1,5 @@
 import dht
 import time
-import redis
 from pyA20.gpio import gpio
 from pyA20.gpio import port
 
@@ -8,27 +7,17 @@ from pyA20.gpio import port
 PIN2 = port.PA6
 gpio.init()
 
-instance = dht.DHTSensor(pin=PIN2)
+#instance = dht.DHTSensor(pin=PIN2, sensor="DHT11")
+instance = dht.DHTSensor(pin=PIN2, sensor="DHT22")
 
-# Redis
-r = redis.Redis(
-        host='localhost',
-        port='',
-        password='password')
-
-def insert_redis(result):
-    print("Adding to redis...")
-
-#read data using pin port.PA6
+# read data using pin port.PA6
 def read_sensor():
     response = instance.read_pin()
 
-    #print(response.temperature)
     if response.error_code == 0:
-        #print("Temperature: %.2f" % response.temperature)
         print("Temp: " + str(response.temperature))
         print("Humidity: " + str(response.humidity))
-   #     insert_redis(result)
+    # MQTT send here
     else:
         print("Error: %d" % response.error_code)
 
