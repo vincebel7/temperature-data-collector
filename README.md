@@ -55,6 +55,8 @@ OR
 
 ![DHT circuit](dht-circuit.jpg)
 
+[Image source](https://osoyoo.com/2017/07/19/arduino-lesson-dht11-sensor/)
+
 ## Process:
 
 There are two components: Client, and Server.
