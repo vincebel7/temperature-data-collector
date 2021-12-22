@@ -18,10 +18,10 @@ services:
   #  build: ./redis
   #  network_mode: host
   #db-writer:
-  #mqtt-listener:
-  #  container_name: mqtt-listener
-  #  build: ./mqtt-listener
-  #  network_mode: host
+  mqtt-subscriber:
+    container_name: mqtt-subscriber
+    build: ./mqtt-subscriber
+    network_mode: host
   mqtt-server:
     container_name: mqtt-server
     build: ./mqtt-server

@@ -6,12 +6,11 @@ EXPOSE 9001
 
 COPY . .
 
-RUN apt update && apt --yes install mosquitto 
+RUN apt update && apt --yes install mosquitto
 
-RUN mosquitto_passwd -U passfile
+RUN mosquitto_passwd -U password_file
 
-RUN cp passfile /etc/mosquitto/passfile
+RUN cp password_file mosquitto.conf /etc/mosquitto/
+RUN cp password_file mosquitto.conf /etc/mosquitto/conf.d/
 
-RUN cp mosquitto.conf /etc/mosquitto/mosquitto.conf
-
-RUN /etc/init.d/mosquitto start
+CMD mosquitto

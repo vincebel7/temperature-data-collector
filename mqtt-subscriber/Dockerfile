@@ -1,5 +1,5 @@
 #FROM python:3.8-slim-buster
-FROM eclipse-mosquitto
+FROM python
 
 MAINTAINER vincebel version: 0.1
 
@@ -19,4 +19,4 @@ RUN pip install -r requirements.txt
 
 #EXPOSE 8080
 
-#CMD ["python3", "collector.py"]
+CMD ["python3", "subscribe-client.py"]

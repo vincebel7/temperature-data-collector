@@ -13,7 +13,9 @@ Docker containers to be included:
 
 ### Server:
 
-- MQTT listener/subscriber
+- MQTT server
+
+- MQTT subscriber
 
 - Redis
 
@@ -97,9 +99,7 @@ Server:
 
 For V1:
 
-- Separate client and server containers, build collector successfully on Orange Pi
-
-- MQTT functionality
+- MQTT functionality across publisher->server->subscriber
 
 - Dockerize Redis
 
@@ -114,5 +114,7 @@ For V2:
 - Clean up and add Arduino code
 
 - deploy Arduino code from setup script? Board setup via wifi?
+
+- Dockerize client/collector
 
 Note: For Arduino+MySQL, utilize this library: https://github.com/ChuckBell/MySQL_Connector_Arduino

@@ -11,7 +11,8 @@ gpio.init()
 #instance = dht.DHTSensor(pin=PIN2, sensor="DHT11")
 instance = dht.DHTSensor(pin=PIN, sensor="DHT22")
 
-mqttIP = "192.168.5.235"
+#mqttIP = "192.168.5.235"
+mqttIP = "localhost"
 client = mqtt.Client("Temperature-Humidity")
 client.connect(mqttIP, 1883, 60)
 
