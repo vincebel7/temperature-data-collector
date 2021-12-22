@@ -8,17 +8,21 @@ services:
     ports:
       - "8080:8080"
     network_mode: host
-    depends_on:
-      - redis
+    #  depends_on:
+    #   - redis
     stdin_open: true
     tty: true
     restart: on-failure
-  redis:
-    container_name: redis
-    build: ./redis
-    network_mode: host
+  #redis:
+  #  container_name: redis
+  #  build: ./redis
+  #  network_mode: host
   #db-writer:
-  mqtt-listener:
-    container_name: mqtt-listener
-    build: ./mqtt-listener
+  #mqtt-listener:
+  #  container_name: mqtt-listener
+  #  build: ./mqtt-listener
+  #  network_mode: host
+  mqtt-server:
+    container_name: mqtt-server
+    build: ./mqtt-server
     network_mode: host
