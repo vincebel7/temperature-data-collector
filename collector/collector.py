@@ -1,5 +1,6 @@
 import dht
 import time
+import datetime
 import paho.mqtt.client as mqtt
 from pyA20.gpio import gpio
 from pyA20.gpio import port
@@ -20,7 +21,7 @@ client.connect(mqttIP, 1883, 60)
 def build_message(response):
     temperature = str(response.temperature)
     humidity = str(response.humidity)
-    time = datetime.now()
+    time = datetime.datetime.now().isoformat()
 
     # dictionary
     msg = {
