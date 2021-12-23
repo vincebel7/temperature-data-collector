@@ -23,6 +23,8 @@ Docker containers to be included:
 
 - Optional application to write values to external MySQL database
 
+![Container diagram](temperature-data-collector-1.jpg)
+
 ## Hardware
 
 ### Board
