@@ -1,23 +1,23 @@
 version: '3'
 services:
-  web:
-    container_name: web
-    build: ./web
-    env_file:
-     - ./.env
-    ports:
-      - "8080:8080"
-    network_mode: host
+  #web:
+  #  container_name: web
+  #  build: ./web
+  #  env_file:
+  #   - ./.env
+  #  ports:
+  #    - "8080:8080"
+  #  network_mode: host
     #  depends_on:
     #   - redis
-    stdin_open: true
-    tty: true
-    restart: on-failure
+    #  stdin_open: true
+  #tty: true
+  #  restart: on-failure
   #redis:
-  #  container_name: redis
-  #  build: ./redis
-  #  network_mode: host
-  #db-writer:
+          #  container_name: redis
+    #  build: ./redis
+    #  network_mode: host
+    #db-writer:
   mqtt-subscriber:
     container_name: mqtt-subscriber
     build: ./mqtt-subscriber
