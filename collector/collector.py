@@ -11,20 +11,35 @@ gpio.init()
 #instance = dht.DHTSensor(pin=PIN2, sensor="DHT11")
 instance = dht.DHTSensor(pin=PIN, sensor="DHT22")
 
-#mqttIP = "192.168.5.235"
-mqttIP = "localhost"
-client = mqtt.Client("Temperature-Humidity")
+mqttIP = "192.168.5.235"
+#mqttIP = "localhost"
+client = mqtt.Client("Temperature-Humidity-Publisher-1")
+client.username_pw_set(username="publisher", password="replace-with-env-pw")
 client.connect(mqttIP, 1883, 60)
+
+def build_message(response):
+    temperature = str(response.temperature)
+    humidity = str(response.humidity)
+    time = datetime.now()
+
+    # dictionary
+    msg = {
+        "time": time,
+        "temperature": temperature,
+        "humidity": humidity,
+    }
+
+    return msg
 
 # read data using pin port.PA6
 def read_sensor():
     response = instance.read_pin()
 
     if response.error_code == 0:
-        print("Temp: " + str(response.temperature))
-        print("Humidity: " + str(response.humidity))
-        client.publish("Temperature", str(response.temperature))
-        client.publish("Humidity", str(response.humidity))
+        msg = build_message(response)
+        print("Temperature: " + msg.get("temperature"))
+        print("Humidity: " + msg.get("humidity"))
+        client.publish("General", msg)
     else:
         print("Error: %d" % response.error_code)
 

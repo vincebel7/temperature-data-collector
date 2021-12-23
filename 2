@@ -21,10 +21,10 @@ def on_message(mqtt_client, userdata, message):
     print("message received, temperature: " + str(temperature))
 
     # Add to Redis
-    redis_client.sadd(redis_set, message) 
+    redis_client.sadd(temp_set, str(message)) 
 
     # Test data was added to redis
-    print(redis_client.smembers(redis_set))
+    print(redis_client.smembers(temp_set))
 
 # Redis connection
 redis_host = "localhost"
@@ -32,7 +32,7 @@ redis_port = 6379
 redis_db = 0
 
 redis_client = redis.StrictRedis(redis_host, redis_port, redis_db)
-redis_set = "DHT-data"
+temp_set = "Temperature"
 
 # MQTT connection
 broker_addr = "localhost"
