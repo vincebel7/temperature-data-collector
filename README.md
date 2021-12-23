@@ -1,15 +1,15 @@
 # temperature-data-collector
 An application intended for a custom-built IoT device, to collect, process, and display temperature and humidity data from a digital temperature and humidity sensor (DHT)
 
-This is an all-in-one project including collectors for various hardware platforms, a Redis server, a MySQL exporter, and a web server to monitor live data.
+This is an all-in-one project including collectors for various hardware platforms, a MQTT system (server, subscribers, publishers), Redis server, a MySQL exporter, and a web server to monitor live data.
 
 Docker containers to be included:
 
 ### Client:
 
-- Pi sensor collector
+- Pi sensor collector (not Dockerized yet)
 
-- Arduino sensor collector
+- Arduino sensor collector (not written yet)
 
 ### Server:
 
@@ -17,7 +17,7 @@ Docker containers to be included:
 
 - MQTT subscriber
 
-- Redis
+- Redis server
 
 - Node.js web server
 
@@ -67,7 +67,7 @@ Client is the code in the collector directory. This can only run standalone for 
 
 Server is everything else (web, redis, etc) and can be run via docker-compose (or each component standalone).
 
-The plan is for the client(s) to send data via MQTT to the listener on the server, which will then add to redis and store to the permanent database. The web server will read from redis.
+Client(s) send data via MQTT to the server. The subscriber then adds to redis and stores to the permanent database. The web server will read from redis.
 
 Focusing on development for the Orange Pi Zero first, due to hardware availability.
 
@@ -76,32 +76,32 @@ Focusing on development for the Orange Pi Zero first, due to hardware availabili
 
 This system is still in development. Some things may not work.
 
-Client:
-
-1. Build the circuit in the "Circuit diagram" section above, with a 10k ohm resistor, DHT sensor, and Orange Pi. Have the data pin going to the proper GPIO port (the collector defaults to PA6)
-
-2. On the Orange Pi, clone this repository and run collector/collector.py. Edit the script if you would like to change the sensor model, GPIO port, sample rate, etc.
-
-3. You should get temperature and humidity values as output. Once the server component is complete, this data will be published via MQTT.
+The server must be runing first, or the client won't be able to make a connection to the MQTT server.
 
 Server:
 
-1. Clone this repository on your server.
+1. Clone this repository on your server
 
-2. Ensure the following ports are open: ?
+2. Ensure port 1883 is open on your server, for the client to send data over
 
 3. Run `docker-compose up --build`
 
 4. Hold tight! Still in development
 
 
+Client:
+
+1. Build the circuit in the "Circuit diagram" section above, with a 10k ohm resistor, DHT sensor, and Orange Pi. Have the data pin going to the proper GPIO port (the collector defaults to PA6)
+
+2. On the Orange Pi, clone this repository and run collector/collector.py. Edit the script if you would like to change the sensor model, GPIO port, sample rate, etc.
+
+3. You should get temperature and humidity values as output, and the data will be published via MQTT for the listening server.
+
 ## TODO:
 
 For V1:
 
-- MQTT functionality across publisher->server->subscriber
-
-- Dockerize Redis
+- Web server integration with Redis
 
 - Basic Collector -> Listener -> Redis -> web server functionality
 

@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 import time
 import redis
+import json
 
 global Connected
 Connected = False
@@ -16,15 +17,18 @@ def on_connect(mqtt_client, userdata, flags, rc):
 def on_subscribe(mqtt_client, userdata, message, idk):
     print("Subscribed to: " + str(message) + " " + str(idk))
 
-def on_message(mqtt_client, userdata, message):
-    temperature = message.get("temperature")
-    print("message received, temperature: " + str(temperature))
+def on_message(mqtt_client, userdata, message_str):
+    jsonload = json.loads(message_str.payload)
+
+    temperature = str(jsonload["temperature"])
+    #print("message received, temperature: " + temperature)
 
     # Add to Redis
-    redis_client.sadd(redis_set, message) 
+    redis_client.lpush(redis_list, str(jsonload))
 
     # Test data was added to redis
-    print(redis_client.smembers(redis_set))
+    #for i in range(0, redis_client.llen(redis_list)):
+    #    print(redis_client.lindex(redis_list, i))
 
 # Redis connection
 redis_host = "localhost"
@@ -32,7 +36,7 @@ redis_port = 6379
 redis_db = 0
 
 redis_client = redis.StrictRedis(redis_host, redis_port, redis_db)
-redis_set = "DHT-data"
+redis_list = "DHT-data"
 
 # MQTT connection
 broker_addr = "localhost"

@@ -1,6 +1,7 @@
 import dht
 import time
 import datetime
+import json
 import paho.mqtt.client as mqtt
 from pyA20.gpio import gpio
 from pyA20.gpio import port
@@ -40,7 +41,8 @@ def read_sensor():
         msg = build_message(response)
         print("Temperature: " + msg.get("temperature"))
         print("Humidity: " + msg.get("humidity"))
-        client.publish("General", msg)
+
+        client.publish("General", json.dumps(msg))
     else:
         print("Error: %d" % response.error_code)
 
