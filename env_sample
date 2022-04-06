@@ -1,8 +1,18 @@
+# env_sample
+# Run server_setup.sh to generate your own .env from this template
+# or simply run cp env_sample .env
+
+# Redis
+REDIS_CONN_STRING=
+
+# MQTT
+MQTT_SUBSCRIBER_USER=
+MQTT_SUBSCRIBER_PASS=
+MQTT_PUBLISHER_USER=
+MQTT_PUBLISHER_PASS=
+
 # Optional MySQL database connection information
 DB_HOST=localhost
 DB_NAME=sensordata
 DB_USER=root
 DB_PASS=v3ry_secur3_pw
-
-# Redis
-REDIS_CONN_STRING=
