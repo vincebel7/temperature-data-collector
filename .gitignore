@@ -1,4 +1,4 @@
 .env
 web/node_modules
 node_modules
-collector/venv
+*venv

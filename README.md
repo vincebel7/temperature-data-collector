@@ -3,11 +3,11 @@ An application intended for a custom-built IoT device, to collect, process, and 
 
 This is an all-in-one project including collectors for various hardware platforms, a MQTT system (server, subscribers, publishers), Redis server, a MySQL exporter, and a web server to monitor live data.
 
-Docker containers to be included:
+Components to be included (eventually all will be Dockerized):
 
 ### Client:
 
-- Pi sensor collector (not Dockerized yet)
+- Pi sensor collector (completed, but not Dockerized yet)
 
 - Arduino sensor collector (not written yet)
 
@@ -105,11 +105,15 @@ For V1:
 
 - Web server integration with Redis
 
-- Basic Collector -> Listener -> Redis -> web server functionality
+- Basic Collector -> Listener (MQTT server/subscriber) -> Redis -> web server functionality
 
-- finish setup script
+- Server: finish setup script
 
-- finish .env and docker-compose
+- Server: finish .env and docker-compose
+
+- Collector: unit tests for Python collector
+
+- Why MQTT? Why not collector -> Redis
 
 For V2:
 
@@ -117,6 +121,6 @@ For V2:
 
 - deploy Arduino code from setup script? Board setup via wifi?
 
-- Dockerize client/collector
+- Dockerize client (collector)
 
 Note: For Arduino+MySQL, utilize this library: https://github.com/ChuckBell/MySQL_Connector_Arduino
