@@ -1,3 +1,9 @@
+"""
+mqtt-subscriber.py
+Author: vincebel7
+Purpose: Subscribes to the MQTT server and redirects messages to other services, such as Redis
+"""
+
 import paho.mqtt.client as mqtt
 import time
 import redis
@@ -21,14 +27,15 @@ def on_message(mqtt_client, userdata, message_str):
     jsonload = json.loads(message_str.payload)
 
     temperature = str(jsonload["temperature"])
-    #print("message received, temperature: " + temperature)
+    humidity = str(jsonload["humidity"])
+    print("message received, temperature: " + temperature + ", humidity: " + humidity)
 
     # Add to Redis
     redis_client.lpush(redis_list, str(jsonload))
 
     # Test data was added to redis
-    #for i in range(0, redis_client.llen(redis_list)):
-    #    print(redis_client.lindex(redis_list, i))
+    for i in range(0, redis_client.llen(redis_list)):
+        print(redis_client.lindex(redis_list, i))
 
 # Redis connection
 redis_host = "localhost"

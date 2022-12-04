@@ -1,6 +1,22 @@
 require("dotenv").config()
 
-// MySQL
+// Redis
+const redis = require('redis');
+const redis_client = redis.createClient({
+	    host: 'localhost',
+	    port: 6379
+});
+
+redis_client.on('error', err => {
+	console.log('Error ' + err);
+});
+
+redis_client.on('ready', () => {
+    let response = client.ping()
+    console.log("Redis ping result: ", response);
+});
+
+// MySQL (TODO)
 
 // Web server
 var http = require('http');
@@ -25,15 +41,20 @@ app.use(express.static('public'));
 // On connection
 
 io.on('connection', function (socket) {
-	socket.on('poll-db', function (message) {
+	async function main() {
+	//socket.on('poll-db', function (message) {
         	console.log("Fetching data...");
+		// Redis part
+		const result = await redis.rpop("DHT-data")
+		console.log(result)
+		//redis_client.rpop(
 		//con.query("SELECT * FROM dht11_data ORDER BY date DESC LIMIT 1", (err, result, field)=>{
 		//	if (err) throw err;
-			socket.emit('data-from-server', {
+		//	socket.emit('data-from-server'), {
 		//		data: result
-			});
-			console.log("Emitted data");
+		//	});
+		//	console.log("Emitted data");
 		//});
-	});
+	}
 });
 
