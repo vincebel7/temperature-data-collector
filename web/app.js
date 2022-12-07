@@ -27,7 +27,6 @@ var server = http.createServer(app);
 var io = require('socket.io')(server);
 
 
-server.listen(8080);
 console.log("Listening on 8080");
 
 app.get('/', function (req, res) {
@@ -39,13 +38,16 @@ app.get('/', function (req, res) {
 app.use(express.static('public')); 
 
 // On connection
-
 io.on('connection', function (socket) {
+        stdout.write("Fetching data...(stdout write)");
+	console.log("Fetching data...(console log)")
 	async function main() {
 	//socket.on('poll-db', function (message) {
-        	console.log("Fetching data...");
+        	stdout.write("Fetching data...(stdout write)");
+		console.log("Fetching data...(console log)")
 		// Redis part
 		const result = await redis.rpop("DHT-data")
+		stdout.write(result)
 		console.log(result)
 		//redis_client.rpop(
 		//con.query("SELECT * FROM dht11_data ORDER BY date DESC LIMIT 1", (err, result, field)=>{
@@ -58,3 +60,4 @@ io.on('connection', function (socket) {
 	}
 });
 
+server.listen(8080);

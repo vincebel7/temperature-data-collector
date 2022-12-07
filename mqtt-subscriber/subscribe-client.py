@@ -22,6 +22,8 @@ def on_connect(mqtt_client, userdata, flags, rc):
 
 def on_subscribe(mqtt_client, userdata, message, idk):
     print("Subscribed to: " + str(message) + " " + str(idk))
+    print("Clearing Redis list...")
+    redis_client.delete(redis_list)
 
 def on_message(mqtt_client, userdata, message_str):
     jsonload = json.loads(message_str.payload)
@@ -34,8 +36,8 @@ def on_message(mqtt_client, userdata, message_str):
     redis_client.lpush(redis_list, str(jsonload))
 
     # Test data was added to redis
-    for i in range(0, redis_client.llen(redis_list)):
-        print(redis_client.lindex(redis_list, i))
+    #for i in range(0, redis_client.llen(redis_list)):
+    #    print(redis_client.lindex(redis_list, i))
 
 # Redis connection
 redis_host = "localhost"
