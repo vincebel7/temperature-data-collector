@@ -44,7 +44,6 @@ def read_sensor():
 
         # Can't publish dict, so convert to string and convert back on subscriber
         stringed_msg = str(json.dumps(msg))
-        print(stringed_msg)
         client.publish("General", stringed_msg)
     else:
         print("Error: %d" % response.error_code)

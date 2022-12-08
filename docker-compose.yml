@@ -13,6 +13,8 @@ services:
   mqtt-subscriber:
     container_name: mqtt-subscriber
     build: ./mqtt-subscriber
+    env_file:
+     - ./.env
     network_mode: host
     depends_on:
       - mqtt-server
