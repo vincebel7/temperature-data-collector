@@ -9,6 +9,8 @@ Components to be included (eventually all will be Dockerized):
 
 - Pi sensor collector (completed, but not Dockerized yet)
 
+OR
+
 - Arduino sensor collector (not written yet)
 
 ### Server:
@@ -21,19 +23,20 @@ Components to be included (eventually all will be Dockerized):
 
 - Node.js web server
 
-- Optional application to write values to external MySQL database
+- (Optional) application to write values to external MySQL database
 
 ![Container diagram](temperature-data-collector-1.jpg)
+
 
 ## Hardware
 
 ### Board
 
-- [Arduino MKR1000](https://store-usa.arduino.cc/collections/boards/products/arduino-mkr1000-wifi-with-headers-mounted)
+- Orange Pi (Zero)
 
 OR
 
-- Orange Pi (Zero)
+- [Arduino MKR1000](https://store-usa.arduino.cc/collections/boards/products/arduino-mkr1000-wifi-with-headers-mounted)
 
 
 ### Sensor
@@ -45,6 +48,7 @@ OR
 - [DHT22 sensor](https://www.adafruit.com/product/385)
 
 	- Recommended. DHT22s are much more accurate, for only a tiny bit more.
+
 
 ### Miscellaneous
 
@@ -65,7 +69,7 @@ OR
 
 There are two components: Client, and Server.
 
-Client is the code in the collector directory. This can only run standalone for now, Docker support hopefully coming soon.
+Client code is in the `collector` directory. This can only run standalone for now, Docker support hopefully coming soon.
 
 Server is everything else (web, redis, etc) and can be run via docker-compose (or each component standalone).
 
@@ -82,13 +86,13 @@ The server must be runing first, or the client won't be able to make a connectio
 
 Server:
 
-1. Clone this repository on your server
+1. Clone and enter this repository on your server
 
-2. Ensure port 1883 is open on your server, for the client to send data over
+2. Ensure port 1883 is open on your server, for the client to send data over. Port 8080 is optional for reaching the web server externally.
 
 3. Run `docker-compose up --build`
 
-4. Hold tight! Still in development
+4. Server is ready to accept new connections from collectors
 
 
 Client:
@@ -103,17 +107,13 @@ Client:
 
 For V1:
 
-- Web server integration with Redis
-
-- Basic Collector -> Listener (MQTT server/subscriber) -> Redis -> web server functionality
-
 - Server: finish setup script
 
 - Server: finish .env and docker-compose
 
 - Collector: unit tests for Python collector
 
-- Why MQTT? Why not collector -> Redis
+- Why MQTT? Why not collector -> Redis, or MQTT -> web
 
 For V2:
 

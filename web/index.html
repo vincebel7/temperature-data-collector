@@ -15,12 +15,12 @@
 		var json_data = JSON.parse(data);
 		console.log(json_data);
 		//var id = json_data.data[0].id;
-		var temperature = data['temperature'];
-		var humidity = data['humidity'];
+		var temperature = json_data['temperature'];
+		var humidity = json_data['humidity'];
 		//var loc = json_data.data[0].location;
 		//var sensor = json_data.data[0].sensor;
 		//var dt = json_data.data[0].date;
-		var time = data['time'];
+		var time = json_data['time'];
 		//var ip = json_data.data[0].ip;
 		console.log(temperature)
 		const options = {

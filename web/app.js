@@ -9,12 +9,6 @@ redis_subscriber.connect();
 redis_subscriber.on('ready', () => console.log("Connected to Redis"));
 redis_subscriber.on('error', err => console.error("Error connecting to Redis", err));
 
-redis_subscriber.on('connect', () => {
-	//redis_client.publish('DHT-data-dummy', "testpub from node"); // Works!
-});
-
-// MySQL (TODO)
-
 // Web server
 var http = require('http');
 var express = require('express');
@@ -26,7 +20,7 @@ const io = require('socket.io')(server);
 console.log("Listening on 8080");
 
 app.get('/', function (req, res) {
-	console.log("New client");
+	console.log("Webpage request");
 	res.sendFile(__dirname + "/index.html");
 });
 
@@ -35,11 +29,10 @@ app.use(express.static('public'));
 
 // On connection
 io.on('connection', function (socket) {
-	console.log("Client connection established");
+	console.log("New socket connection established");
 
 	(async () => {
 		await redis_subscriber.subscribe('DHT-data', (message) => {
-			console.log(message);
 			socket.emit("data-from-server", message);
 		});
 	})();
