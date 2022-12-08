@@ -43,7 +43,9 @@ def read_sensor():
         print("Humidity: " + msg.get("humidity"))
 
         # Can't publish dict, so convert to string and convert back on subscriber
-        client.publish("General", json.dumps(msg))
+        stringed_msg = str(json.dumps(msg))
+        print(stringed_msg)
+        client.publish("General", stringed_msg)
     else:
         print("Error: %d" % response.error_code)
 
