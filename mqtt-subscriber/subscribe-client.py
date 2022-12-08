@@ -22,18 +22,19 @@ def on_connect(mqtt_client, userdata, flags, rc):
 
 def on_subscribe(mqtt_client, userdata, message, idk):
     print("Subscribed to: " + str(message) + " " + str(idk))
-    print("Clearing Redis list...")
-    redis_client.delete(redis_list)
+    #print("Clearing Redis list...")
+    #redis_client.delete(redis_list)
 
 def on_message(mqtt_client, userdata, message_str):
     jsonload = json.loads(message_str.payload)
 
     temperature = str(jsonload["temperature"])
     humidity = str(jsonload["humidity"])
-    print("message received, temperature: " + temperature + ", humidity: " + humidity)
+    print("message received: " + str(jsonload))
 
     # Add to Redis
-    redis_client.lpush(redis_list, str(jsonload))
+    #redis_client.lpush(redis_list, str(jsonload))
+    redis_client.publish("DHT-data", str(jsonload))
 
     # Test data was added to redis
     #for i in range(0, redis_client.llen(redis_list)):
@@ -45,7 +46,7 @@ redis_port = 6379
 redis_db = 0
 
 redis_client = redis.StrictRedis(redis_host, redis_port, redis_db)
-redis_list = "DHT-data"
+redis_channel = "DHT-data"
 
 # MQTT connection
 broker_addr = "localhost"

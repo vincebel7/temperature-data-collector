@@ -1,19 +1,16 @@
-require("dotenv").config()
+require("dotenv").config();
 
 // Redis
 const redis = require('redis');
-const redis_client = redis.createClient({
-	    host: 'localhost',
-	    port: 6379
-});
+const redis_client = redis.createClient({ socket: { port: 6379 } });
+const redis_subscriber = redis_client.duplicate();
+redis_subscriber.connect();
 
-redis_client.on('error', err => {
-	console.log('Error ' + err);
-});
+redis_subscriber.on('ready', () => console.log("Connected to Redis"));
+redis_subscriber.on('error', err => console.error("Error connecting to Redis", err));
 
-redis_client.on('ready', () => {
-    let response = client.ping()
-    console.log("Redis ping result: ", response);
+redis_subscriber.on('connect', () => {
+	//redis_client.publish('DHT-data-dummy', "testpub from node"); // Works!
 });
 
 // MySQL (TODO)
@@ -24,8 +21,7 @@ var express = require('express');
 var app = express();
 
 var server = http.createServer(app);
-var io = require('socket.io')(server);
-
+const io = require('socket.io')(server);
 
 console.log("Listening on 8080");
 
@@ -39,25 +35,14 @@ app.use(express.static('public'));
 
 // On connection
 io.on('connection', function (socket) {
-        stdout.write("Fetching data...(stdout write)");
-	console.log("Fetching data...(console log)")
-	async function main() {
-	//socket.on('poll-db', function (message) {
-        	stdout.write("Fetching data...(stdout write)");
-		console.log("Fetching data...(console log)")
-		// Redis part
-		const result = await redis.rpop("DHT-data")
-		stdout.write(result)
-		console.log(result)
-		//redis_client.rpop(
-		//con.query("SELECT * FROM dht11_data ORDER BY date DESC LIMIT 1", (err, result, field)=>{
-		//	if (err) throw err;
-		//	socket.emit('data-from-server'), {
-		//		data: result
-		//	});
-		//	console.log("Emitted data");
-		//});
-	}
+	console.log("Client connection established");
+
+	(async () => {
+		await redis_subscriber.subscribe('DHT-data', (message) => {
+			console.log(message);
+			socket.emit("data-from-server", message);
+		});
+	})();
 });
 
 server.listen(8080);
