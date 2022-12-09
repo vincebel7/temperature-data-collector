@@ -1,5 +1,5 @@
 # MQTT connection information
-MQTT_PUB_USER=
+MQTT_PUB_USER=publisher
 MQTT_PUB_PASS=replace-with-env-pw
 MQTT_SUB_USER=subscriber
 MQTT_SUB_PASS=replace-with-env-pw

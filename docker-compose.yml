@@ -8,6 +8,8 @@ services:
   mqtt-server:
     container_name: mqtt-server
     build: ./mqtt-server
+    env_file:
+     - ./.env
     network_mode: host
 
   mqtt-subscriber:

@@ -70,11 +70,7 @@ if(USE_MYSQL == True):
     conn = engine.connect()
 
 # Redis connection
-redis_host = "localhost"
-redis_port = 6379
-redis_db = 0
-
-redis_client = redis.StrictRedis(redis_host, redis_port, redis_db)
+redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT, REDIS_DB)
 
 # MQTT connection
 mqtt_client = mqtt.Client("Temperature-Humidity-Subscriber-1")

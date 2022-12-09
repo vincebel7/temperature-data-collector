@@ -2,9 +2,20 @@ import dht
 import time
 import datetime
 import json
+import os
+import pathlib
 import paho.mqtt.client as mqtt
+from dotenv import load_dotenv
 from pyA20.gpio import gpio
 from pyA20.gpio import port
+
+file_path = pathlib.Path(__file__).parent.resolve()
+load_dotenv(str(file_path) + '/../.env')
+
+MQTT_BROKER = "192.168.5.235"
+MQTT_PUB_USER = os.getenv("MQTT_SUB_USER")
+MQTT_PUB_PASS = os.getenv("MQTT_SUB_PASS")
+MQTT_PORT = 1883
 
 #initialize GPIO
 PIN = port.PA6
@@ -13,11 +24,9 @@ gpio.init()
 #instance = dht.DHTSensor(pin=PIN2, sensor="DHT11")
 instance = dht.DHTSensor(pin=PIN, sensor="DHT22")
 
-mqttIP = "192.168.5.235"
-#mqttIP = "localhost"
 client = mqtt.Client("Temperature-Humidity-Publisher-1")
-client.username_pw_set(username="publisher", password="replace-with-env-pw")
-client.connect(mqttIP, 1883, 60)
+client.username_pw_set(username=MQTT_PUB_USER, password=MQTT_PUB_PASS)
+client.connect(MQTT_BROKER, MQTT_PORT, 60)
 
 def build_message(response):
     temperature = str(response.temperature)
