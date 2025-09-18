@@ -1,4 +1,4 @@
-from collector import dht
+import dht
 import time
 import datetime
 import json
