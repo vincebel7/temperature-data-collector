@@ -109,13 +109,13 @@ For V1:
 
 - Server: finish setup script
 
-- Collector: unit tests for Python collector
-
 - Server: MySQL export functionality in MQTT subscriber
+
+- Model files for casing / outdoor placement
 
 
 For V2:
 
-- Collector: Finish Arduino platform
+- Collector: Finish Arduino platform (or ESP32?)
 
 - Arduino + setup script? Board setup via wifi?
