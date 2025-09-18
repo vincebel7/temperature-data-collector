@@ -3,3 +3,4 @@
 *venv
 *package-lock.json
 package-lock.json
+*pyc

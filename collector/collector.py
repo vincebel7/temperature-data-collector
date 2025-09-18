@@ -1,4 +1,4 @@
-import dht
+from collector import dht
 import time
 import datetime
 import json
@@ -59,4 +59,4 @@ def read_sensor():
 
 while True:
     read_sensor()
-    time.sleep(0.5)
+    time.sleep(2) #2 seconds, maximum poll rate for DHT22 is 0.5 Hz
