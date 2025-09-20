@@ -1,5 +1,5 @@
 # temperature-data-collector
-An application enabling a custom-built IoT device to collect, process, and display temperature and humidity data from a digital temperature and humidity sensor (DHT)
+An open-source DIY weather station, consisting of lightweight collectors and a Dockerized sensor Hub (MQTT + web dashboard). Currently collects temperature and humidity data, while barometric pressure and air quality are on the roadmap.
 
 This is an all-in-one project which includes: collectors for various hardware platforms, an MQTT system (server, subscribers, publishers), Redis server, the ability to write to MySQL, and a web server to monitor live data.
 
@@ -7,13 +7,13 @@ There are two components: Collector, and Server.
 
 ### Collector
 
-- Pi sensor collector
+- Arduino sensor collector
 
 OR
 
-- Arduino sensor collector (not written yet)
+- Orange Pi sensor collector (deprecated)
 
-### Server
+### Server ("Hub")
 
 - MQTT server
 
@@ -32,22 +32,22 @@ OR
 
 ### Board
 
-- [Orange Pi (Zero)](https://a.co/d/6ztEWGC)
+- [Arduino MKR1000](https://store-usa.arduino.cc/collections/boards/products/arduino-mkr1000-wifi-with-headers-mounted)
 
 OR
 
-- [Arduino MKR1000](https://store-usa.arduino.cc/collections/boards/products/arduino-mkr1000-wifi-with-headers-mounted)
+- [Orange Pi (Zero)](https://a.co/d/6ztEWGC)
 
 
 ### Sensor
 
-- [DHT11 sensor](https://www.amazon.com/Temperature-Humidity-Digital-3-3V-5V-Raspberry/dp/B07WT2HJ4F/ref=sr_1_1?keywords=dht11+sensor&qid=1638560461&sr=8-1)
-
-OR
-
 - [DHT22 sensor](https://www.adafruit.com/product/385)
 
-	- Recommended. DHT22s are much more accurate, for only a tiny bit more.
+	- DHT11s were supported in the Orange Pi version, but will not be supported going forward.
+
+- [BME280 sensor](https://www.adafruit.com/product/2652)
+
+	- For barometric pressure. Not supported yet, but will be shortly! Probably will replace the DHT22.
 
 
 ### Miscellaneous
@@ -57,6 +57,13 @@ OR
 - Jumper wires
 
 - 10k ohm resistor (pull-up)
+
+- Optional: Status LED and 220 ohm resistor
+
+
+### Enclosures
+
+Coming soon
 
 
 ### DHT circuit diagram
@@ -68,7 +75,7 @@ OR
 
 ## How it runs
 
-Collector code is in the `collector` directory. This is just a Python script.
+Collector code is in the `collector` or `collector-esp32` directory.
 
 Server is everything else (web, redis, etc) and can be run via docker-compose (or each component standalone).
 
@@ -90,7 +97,17 @@ Server:
 4. Server is ready to accept new connections from collectors, and the web server should be visible at `http://server_ip:8080`
 
 
-Collector:
+Collector (ESP32 / Arduino):
+1. Install any prerequisite libraries (list coming soon)
+
+2. Fill in your MQTT and Wifi credentials
+
+3. Flash the code in `collector-esp32/collector.ino` to your board.
+
+NOTE: The device goes into low power mode to save battery, so if you need to flash again, double-tap the button on the board to go into bootloader mode to ensure continuous connection to your PC.
+
+
+Collector (Orange Pi):
 
 1. Build the circuit in the "Circuit diagram" section above, with a 10k ohm resistor, DHT sensor, and Orange Pi. Have the data pin going to the proper GPIO port (the collector defaults to PA6)
 
@@ -111,11 +128,23 @@ For V1:
 
 - Server: MySQL export functionality in MQTT subscriber
 
-- Model files for casing / outdoor placement
+- Collector: Model files for casing / outdoor placement
+
+- Collector: Credential management
+
+- Collector: Barometric pressure sensor
+
+- Collector: Batteries
+
+- Collector: Phase out / fully deprecate Orange Pi version
+
+- Branding
 
 
 For V2:
 
-- Collector: Finish Arduino platform (or ESP32?)
+- Collector: Solar
 
-- Arduino + setup script? Board setup via wifi?
+- Collector: AQI sensors
+
+- Server: Modular "hub" to make platform more accessible

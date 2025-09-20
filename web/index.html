@@ -17,6 +17,7 @@
 		//var id = json_data.data[0].id;
 		var temperature = json_data['temperature'];
 		var humidity = json_data['humidity'];
+		var pressure = json_data['pressure'];
 		//var loc = json_data.data[0].location;
 		//var sensor = json_data.data[0].sensor;
 		//var dt = json_data.data[0].date;
@@ -32,7 +33,7 @@
 
 		var newtime = new Date(time).toLocaleTimeString("en-US",options);;
 
-		var message = newtime + ": TEMPERATURE " + temperature + ", HUMIDITY " + humidity;
+		var message = newtime + ": TEMPERATURE " + temperature + ", HUMIDITY " + humidity + ", PRESSURE " + pressure;
 		var dataDiv = document.getElementById('databox');
 
 		dataDiv.appendChild( document.createElement("br") );
