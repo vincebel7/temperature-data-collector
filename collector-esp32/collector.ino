@@ -21,7 +21,10 @@ WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
 
 // Publish interval (seconds)
-const unsigned long publishInterval = 30;
+const unsigned long publishInterval = 10;
+
+char macStr[18];
+byte mac[6];
 
 void setup() {
   pinMode(LEDPIN, OUTPUT);
@@ -36,6 +39,9 @@ void setup() {
     digitalWrite(LEDPIN, LOW);
     delay(200);
   }
+
+  WiFi.macAddress(mac);
+  sprintf(macStr, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 }
 
 void loop() {
@@ -89,7 +95,7 @@ void loop() {
 
   // --- Build JSON message ---
   String msg = "{";
-  msg += "\"time\": " + String(millis()) + ",";
+  msg += "\"id\": " + String(macStr) + ",";
   msg += "\"temperature\": " + String(t, 1) + ",";
   msg += "\"humidity\": " + String(h, 1) + ",";
   msg += "\"pressure\": " + String(0); // placeholder

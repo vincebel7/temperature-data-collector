@@ -53,15 +53,9 @@ def on_subscribe(mqtt_client, userdata, message, idk):
 def on_message(mqtt_client, userdata, message_str):
     payload = message_str.payload.decode('utf8')
     jsonload = json.loads(payload)
+
     # Add a server-side timestamp
     jsonload['time'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
-
-    # Get remote IP address (if available)
-    try:
-        ip_addr = mqtt_client._sock.getpeername()[0]
-        jsonload['ip'] = str(ip_addr)
-    except Exception:
-        jsonload['ip'] = "unknown"
 
     jsondump = json.dumps(jsonload)
     print("Data received: " + jsondump)
