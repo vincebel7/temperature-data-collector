@@ -40,8 +40,25 @@ void setup() {
     delay(200);
   }
 
-  WiFi.macAddress(mac);
-  sprintf(macStr, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+  // Connect to WiFi just to get MAC address
+  Serial.println("Connecting to WiFi for MAC...");
+  WiFi.begin(ssid, pass);
+  unsigned long startAttempt = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() - startAttempt < 10000) {
+    delay(500);
+    Serial.print(".");
+  }
+  if (WiFi.status() == WL_CONNECTED) {
+    WiFi.macAddress(mac);
+    sprintf(macStr, "%02X:%02X:%02X:%02X:%02X:%02X",
+            mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    Serial.println(macStr);
+    WiFi.disconnect();
+    WiFi.end();
+  } else {
+    Serial.println("\nFailed to connect for MAC, using default ID");
+    strcpy(macStr, "00:00:00:00:00:00");
+  }
 }
 
 void loop() {
@@ -95,7 +112,7 @@ void loop() {
 
   // --- Build JSON message ---
   String msg = "{";
-  msg += "\"id\": " + String(macStr, 1) + ",";
+  msg += "\"id\": \"" + String(macStr) + "\",";
   msg += "\"temperature\": " + String(t, 1) + ",";
   msg += "\"humidity\": " + String(h, 1) + ",";
   msg += "\"pressure\": " + String(0); // placeholder
@@ -123,3 +140,5 @@ void loop() {
   //LowPower.idle(publishInterval * 1000); // Doesn't work reliably on MKR1000, maybe for ESP32
   delay(publishInterval * 1000);
 }
+
+

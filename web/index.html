@@ -2,14 +2,16 @@
 <script src="https://cdn.socket.io/4.4.0/socket.io.min.js" integrity="sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj" crossorigin="anonymous"></script>
 
 <h1 class="title">🌡️ Weather Readings</h1>
-<button id="toggle-dark" style="margin: 0 auto; display: block;">🌙 Toggle Dark Mode</button>
+<button id="toggle-dark" style="margin: 0 auto; display: block;">Dark Mode</button>
+<br>
 <a class="github-link" href="https://github.com/vincebel7/temperature-data-collector" target="_blank">GitHub</a>
 <hr>
 <div id="databox"></div>
 
 <script>
 document.getElementById('toggle-dark').onclick = function() {
-	document.body.classList.toggle('dark-mode');
+    document.body.classList.toggle('dark-mode');
+    this.textContent = document.body.classList.contains('dark-mode') ? "Light Mode" : "Dark Mode";
 };
 
 const socket = io();
