@@ -21,7 +21,7 @@ socket.on('data-from-server', function (data) {
 	var humidity = jsonData['humidity'];
 	var pressure = jsonData['pressure'];
 	var time = jsonData['time'];
-	var ip = jsonData.data['ip'];
+	var ip = jsonData['ip'];
 	//var id = jsonData.data[0].id;
 	//var loc = jsonData.data[0].location;
 	//var sensor = jsonData.data[0].sensor;
@@ -41,8 +41,9 @@ socket.on('data-from-server', function (data) {
 	var message = newtime + ": HOST " + ip + ", TEMPERATURE " + temp_f + "° F, HUMIDITY " + humidityFmt + "%, PRESSURE " + pressure;
 	var dataDiv = document.getElementById('databox');
 
-	dataDiv.appendChild( document.createElement("br") );
-	dataDiv.appendChild( document.createTextNode(message) );
+	var msgSpan = document.createElement("span");
+	msgSpan.textContent = message;
+	dataDiv.appendChild(msgSpan);
 	dataDiv.scrollTop = dataDiv.scrollHeight;
 });
 
