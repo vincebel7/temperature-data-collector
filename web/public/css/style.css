@@ -73,3 +73,29 @@ hr {
         font-size: 1.5em;
     }
 }
+
+.dark-mode {
+    background: #23272f;
+}
+
+.dark-mode #databox {
+    background-color: #2c3440;
+    color: #eafaf1;
+    box-shadow: 0 4px 16px rgba(44, 62, 80, 0.25);
+}
+
+.dark-mode .title {
+    color: #eafaf1;
+}
+
+.dark-mode hr {
+    border-top: 2px solid #2980b9;
+}
+
+.dark-mode .github-link {
+    color: #8cdc97;
+}
+
+.dark-mode #databox span {
+    border-bottom: 1px solid #34495e;
+}

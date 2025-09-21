@@ -2,52 +2,56 @@
 <script src="https://cdn.socket.io/4.4.0/socket.io.min.js" integrity="sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj" crossorigin="anonymous"></script>
 
 <h1 class="title">🌡️ Weather Readings</h1>
+<button id="toggle-dark" style="margin: 0 auto; display: block;">🌙 Toggle Dark Mode</button>
 <a class="github-link" href="https://github.com/vincebel7/temperature-data-collector" target="_blank">GitHub</a>
 <hr>
 <div id="databox"></div>
 
 <script>
-	const socket = io();
+document.getElementById('toggle-dark').onclick = function() {
+	document.body.classList.toggle('dark-mode');
+};
 
-	socket.on('data-from-server', function (data) {
-		var jsonData = JSON.parse(data);
-		console.log(jsonData);
-		var temp_c = jsonData['temperature'];
-		var humidity = jsonData['humidity'];
-		var pressure = jsonData['pressure'];
-		var time = jsonData['time'];
-		var ip = jsonData.data['ip'];
-		//var id = jsonData.data[0].id;
-		//var loc = jsonData.data[0].location;
-		//var sensor = jsonData.data[0].sensor;
-		//var dt = jsonData.data[0].date;
+const socket = io();
 
-		const timeOptions = {
-			hour12: true,
-			hour: "2-digit",
-			minute: "2-digit",
-			second: "2-digit"
-		};
+socket.on('data-from-server', function (data) {
+	var jsonData = JSON.parse(data);
+	console.log(jsonData);
+	var temp_c = jsonData['temperature'];
+	var humidity = jsonData['humidity'];
+	var pressure = jsonData['pressure'];
+	var time = jsonData['time'];
+	var ip = jsonData.data['ip'];
+	//var id = jsonData.data[0].id;
+	//var loc = jsonData.data[0].location;
+	//var sensor = jsonData.data[0].sensor;
+	//var dt = jsonData.data[0].date;
 
-		var newtime = new Date(time).toLocaleTimeString("en-US",timeOptions);;
-		var temp_f = ((temp_c * 9/5) + 32).toFixed(1);
-		var humidityFmt = Number(humidity).toFixed(1);
+	const timeOptions = {
+		hour12: true,
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit"
+	};
 
-		var message = newtime + ": HOST " + ip + ", TEMPERATURE " + temp_f + "° F, HUMIDITY " + humidityFmt + "%, PRESSURE " + pressure;
-		var dataDiv = document.getElementById('databox');
+	var newtime = new Date(time).toLocaleTimeString("en-US",timeOptions);;
+	var temp_f = ((temp_c * 9/5) + 32).toFixed(1);
+	var humidityFmt = Number(humidity).toFixed(1);
 
-		var msgSpan = document.createElement("span");
-		msgSpan.textContent = message;
-		dataDiv.appendChild(msgSpan);
-		dataDiv.scrollTop = dataDiv.scrollHeight;
-	});
+	var message = newtime + ": HOST " + ip + ", TEMPERATURE " + temp_f + "° F, HUMIDITY " + humidityFmt + "%, PRESSURE " + pressure;
+	var dataDiv = document.getElementById('databox');
 
-	var polldb = async function () { while (true) {
-		socket.emit('poll-db', {});
+	dataDiv.appendChild( document.createElement("br") );
+	dataDiv.appendChild( document.createTextNode(message) );
+	dataDiv.scrollTop = dataDiv.scrollHeight;
+});
 
-	  	// Wait 1 second
-	  	await new Promise(resolve => setTimeout(resolve, 1000));
-	}};
+var polldb = async function () { while (true) {
+	socket.emit('poll-db', {});
 
-	polldb();
+	// Wait 1 second
+	await new Promise(resolve => setTimeout(resolve, 1000));
+}};
+
+polldb();
 </script>
