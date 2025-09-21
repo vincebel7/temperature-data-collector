@@ -1,11 +1,18 @@
-#include <WiFi101.h>
 #include <ArduinoMqttClient.h>
 #include <DHT22.h>
-#include <RTCZero.h>
-#include <ArduinoLowPower.h>
 
-#define LEDPIN A5
-#define DHTPIN A6
+#if defined(ESP32)
+  #include <WiFi.h>
+  #define LEDPIN 2
+  #define DHTPIN 4
+#elif defined(ARDUINO_SAMD_MKR1000)
+  #include <WiFi101.h>
+  #define LEDPIN A5
+  #define DHTPIN A6
+#else
+  #error "Unsupported board. Please compile for ESP32 or MKR1000."
+#endif
+
 DHT22 dht(DHTPIN);
 
 char ssid[] = "";
@@ -53,8 +60,13 @@ void setup() {
     sprintf(macStr, "%02X:%02X:%02X:%02X:%02X:%02X",
             mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     Serial.println(macStr);
-    WiFi.disconnect();
-    WiFi.end();
+    
+    #if defined(ESP32)
+      WiFi.disconnect(true);
+    #elif defined(ARDUINO_SAMD_MKR1000)
+      WiFi.disconnect();
+      WiFi.end();
+    #endif
   } else {
     Serial.println("\nFailed to connect for MAC, using default ID");
     strcpy(macStr, "00:00:00:00:00:00");
@@ -65,11 +77,15 @@ void loop() {
   // --- Ensure WiFi connection ---
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("Connecting to WiFi...");
-    WiFi.disconnect();
+    #if defined(ESP32)
+      WiFi.disconnect(true);
+    #elif defined(ARDUINO_SAMD_MKR1000)
+      WiFi.disconnect();
+    #endif
     WiFi.begin(ssid, pass);
 
     unsigned long startAttempt = millis();
-    while (WiFi.status() != WL_CONNECTED && millis() - startAttempt < 10000) { // 10s timeout
+    while (WiFi.status() != WL_CONNECTED && millis() - startAttempt < 10000) {
       delay(500);
       Serial.print(".");
     }
@@ -78,9 +94,15 @@ void loop() {
       Serial.print("IP: ");
       Serial.println(WiFi.localIP());
     } else {
-      Serial.println(" WiFi failed, going to sleep...");
-      WiFi.disconnect();
-      LowPower.sleep(publishInterval * 1000);
+      Serial.println(" WiFi failed, waiting...");
+
+      #if defined(ESP32)
+        WiFi.disconnect(true);
+      #elif defined(ARDUINO_SAMD_MKR1000)
+        WiFi.disconnect();
+      #endif
+
+      delay(publishInterval * 1000);
       return;
     }
   }
@@ -92,8 +114,13 @@ void loop() {
     if (!mqttClient.connect(broker, port)) {
       Serial.print("MQTT failed, code = ");
       Serial.println(mqttClient.connectError());
-      WiFi.disconnect();
-      LowPower.sleep(publishInterval * 1000);
+      #if defined(ESP32)
+        WiFi.disconnect(true);
+      #elif defined(ARDUINO_SAMD_MKR1000)
+        WiFi.disconnect();
+      #endif
+
+      delay(publishInterval * 1000);
       return;
     }
     Serial.println("MQTT connected");
@@ -105,8 +132,12 @@ void loop() {
 
   if (isnan(h) || isnan(t)) {
     Serial.println("Sensor read error, skipping publish");
-    WiFi.disconnect();
-    LowPower.sleep(publishInterval * 1000);
+    #if defined(ESP32)
+      WiFi.disconnect(true);
+    #elif defined(ARDUINO_SAMD_MKR1000)
+      WiFi.disconnect();
+    #endif
+    delay(publishInterval * 1000);
     return;
   }
 
@@ -115,7 +146,7 @@ void loop() {
   msg += "\"id\": \"" + String(macStr) + "\",";
   msg += "\"temperature\": " + String(t, 1) + ",";
   msg += "\"humidity\": " + String(h, 1) + ",";
-  msg += "\"pressure\": " + String(0); // placeholder
+  msg += "\"pressure\": " + String(0);
   msg += "}";
 
   // --- Publish ---
@@ -133,12 +164,13 @@ void loop() {
 
   // --- Disconnect to save power ---
   mqttClient.stop();
-  WiFi.disconnect();
-  WiFi.end();
+    #if defined(ESP32)
+      WiFi.disconnect(true);
+    #elif defined(ARDUINO_SAMD_MKR1000)
+      WiFi.disconnect();
+      WiFi.end();
+    #endif
 
   Serial.println("Sleeping...");
-  //LowPower.idle(publishInterval * 1000); // Doesn't work reliably on MKR1000, maybe for ESP32
-  delay(publishInterval * 1000);
+  delay(publishInterval * 1000);  // replace with deep sleep later
 }
-
-

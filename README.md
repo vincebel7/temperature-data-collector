@@ -30,13 +30,13 @@ OR
 
 ## Hardware
 
-### Board
+### Supported Boards
 
 - [Arduino MKR1000](https://store-usa.arduino.cc/collections/boards/products/arduino-mkr1000-wifi-with-headers-mounted)
 
-OR
+- [ESP32](https://www.espressif.com/en/products/socs/esp32)
 
-- [Orange Pi (Zero)](https://a.co/d/6ztEWGC)
+- [Orange Pi (Zero)](https://a.co/d/6ztEWGC) (deprecated)
 
 
 ### Sensor
@@ -95,14 +95,17 @@ Server:
 4. Server is ready to accept new connections from collectors, and the web server should be visible at `http://server_ip:8080`
 
 
-Collector (ESP32 / Arduino):
-1. Install any prerequisite libraries (list coming soon)
+Collector (ESP32 / Arduino MKR1000):
+1. Build the circuit in the "Circuit diagram" section above, with a 10k ohm resistor, DHT sensor, and your board. Have the data pin going to the proper GPIO port.
 
-2. Fill in your MQTT and Wifi credentials
+2. In the [Arduino IDE](https://www.arduino.cc/en/software/), choose your board, and install these prerequisite libraries from the Library Manager:
+- ArduinoMqttClient ([source](https://github.com/arduino-libraries/ArduinoMqttClient))
+- DHT22 ([source](https://github.com/dvarrel/DHT22))
+- WiFi101 (if using Arduino MKR1000) ([source](https://docs.arduino.cc/libraries/wifi101))
 
-3. Flash the code in `collector-esp32/collector.ino` to your board.
+3. Fill in your MQTT and WiFi credentials near the top of the code.
 
-NOTE for ESP32 only: ESP32 goes into low power mode to save battery, so if you need to flash again, double-tap the button on the board to go into bootloader mode to ensure continuous connection to your PC.
+4. Flash the code in `collector-esp32/collector.ino` to your board.
 
 
 Collector (Orange Pi):
@@ -116,7 +119,7 @@ Collector (Orange Pi):
 4. You should get temperature and humidity values as output, and the data will be published via MQTT for the listening server.
 
 
-## Development notes
+## Feature Wishlist
 
 For V1:
 
