@@ -95,7 +95,7 @@ void loop() {
 
   // --- Build JSON message ---
   String msg = "{";
-  msg += "\"id\": " + String(macStr) + ",";
+  msg += "\"id\": " + String(macStr, 1) + ",";
   msg += "\"temperature\": " + String(t, 1) + ",";
   msg += "\"humidity\": " + String(h, 1) + ",";
   msg += "\"pressure\": " + String(0); // placeholder
