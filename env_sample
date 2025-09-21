@@ -5,7 +5,7 @@ MQTT_SUB_USER=subscriber
 MQTT_SUB_PASS=replace-with-env-pw
 
 # MySQL database connection information
-USE_MYSQL=True
+USE_MYSQL=False
 DB_HOST=localhost
 DB_NAME=sensordata
 DB_USER=

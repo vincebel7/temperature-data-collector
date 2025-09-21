@@ -1,8 +1,8 @@
 <link href="/css/style.css" rel="stylesheet" type="text/css">
 <script src="https://cdn.socket.io/4.4.0/socket.io.min.js" integrity="sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj" crossorigin="anonymous"></script>
 
-<h1>Weather Readings</h1>
-<a href="https://github.com/vincebel7/temperature-data-collector">Github</a>
+<h1 class="title">🌡️ Weather Readings</h1>
+<a class="github-link" href="https://github.com/vincebel7/temperature-data-collector" target="_blank">GitHub</a>
 <hr>
 <div id="databox"></div>
 
@@ -10,35 +10,35 @@
 	const socket = io();
 
 	socket.on('data-from-server', function (data) {
-		console.log(data);
-		var json_data = JSON.parse(data);
-		console.log(json_data);
-		//var id = json_data.data[0].id;
-		var temp_c = json_data['temperature'];
-		var humidity = json_data['humidity'];
-		var pressure = json_data['pressure'];
-		//var loc = json_data.data[0].location;
-		//var sensor = json_data.data[0].sensor;
-		//var dt = json_data.data[0].date;
-		var time = json_data['time'];
-		//var ip = json_data.data[0].ip;
+		var jsonData = JSON.parse(data);
+		console.log(jsonData);
+		var temp_c = jsonData['temperature'];
+		var humidity = jsonData['humidity'];
+		var pressure = jsonData['pressure'];
+		var time = jsonData['time'];
+		var ip = jsonData.data['ip'];
+		//var id = jsonData.data[0].id;
+		//var loc = jsonData.data[0].location;
+		//var sensor = jsonData.data[0].sensor;
+		//var dt = jsonData.data[0].date;
 
-		const options = {
+		const timeOptions = {
 			hour12: true,
 			hour: "2-digit",
 			minute: "2-digit",
 			second: "2-digit"
 		};
 
-		var newtime = new Date(time).toLocaleTimeString("en-US",options);;
+		var newtime = new Date(time).toLocaleTimeString("en-US",timeOptions);;
 		var temp_f = ((temp_c * 9/5) + 32).toFixed(1);
-		var humidity_fmt = Number(humidity).toFixed(1);
+		var humidityFmt = Number(humidity).toFixed(1);
 
-		var message = newtime + ": TEMPERATURE " + temp_f + "° F, HUMIDITY " + humidity_fmt + "%, PRESSURE " + pressure;
+		var message = newtime + ": HOST " + ip + ", TEMPERATURE " + temp_f + "° F, HUMIDITY " + humidityFmt + "%, PRESSURE " + pressure;
 		var dataDiv = document.getElementById('databox');
 
-		dataDiv.appendChild( document.createElement("br") );
-		dataDiv.appendChild( document.createTextNode(message) );
+		var msgSpan = document.createElement("span");
+		msgSpan.textContent = message;
+		dataDiv.appendChild(msgSpan);
 		dataDiv.scrollTop = dataDiv.scrollHeight;
 	});
 

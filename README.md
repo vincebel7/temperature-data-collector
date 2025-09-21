@@ -84,8 +84,6 @@ Collectors send data via MQTT to the server. The MQTT subscriber then adds to re
 
 ## Getting started
 
-The server must be running first, or the collector won't be able to make a connection to the MQTT server.
-
 Server:
 
 1. Clone and enter this repository on your server
@@ -104,7 +102,7 @@ Collector (ESP32 / Arduino):
 
 3. Flash the code in `collector-esp32/collector.ino` to your board.
 
-NOTE: The device goes into low power mode to save battery, so if you need to flash again, double-tap the button on the board to go into bootloader mode to ensure continuous connection to your PC.
+NOTE for ESP32 only: ESP32 goes into low power mode to save battery, so if you need to flash again, double-tap the button on the board to go into bootloader mode to ensure continuous connection to your PC.
 
 
 Collector (Orange Pi):

@@ -45,26 +45,33 @@ def on_connect(mqtt_client, userdata, flags, rc):
     else:
         print("Connection failed")
 
+
 def on_subscribe(mqtt_client, userdata, message, idk):
     print("Subscribed to MQTT server")
+
 
 def on_message(mqtt_client, userdata, message_str):
     payload = message_str.payload.decode('utf8')
     jsonload = json.loads(payload)
     # Add a server-side timestamp
-    jsonload['time'] = datetime.datetime.now(datetime.timezone.utc).isoformat() + "Z"   # ISO 8601 in UTC
+    jsonload['time'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+    # Get remote IP address (if available)
+    try:
+        ip_addr = mqtt_client._sock.getpeername()[0]
+        jsonload['ip'] = str(ip_addr)
+    except Exception:
+        jsonload['ip'] = "unknown"
 
     jsondump = json.dumps(jsonload)
-    
     print("Data received: " + jsondump)
-
-    # Add to Redis
     redis_client.publish(REDIS_CHANNEL, str(jsondump))
-
     if(USE_MYSQL == True): insert_mysql(mqtt_client, jsondump)
+
 
 def insert_mysql(mqtt_client, message):
     return
+
 
 # MySQL connection
 if(USE_MYSQL == True):
