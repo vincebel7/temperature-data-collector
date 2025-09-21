@@ -39,54 +39,81 @@ void setup() {
 }
 
 void loop() {
-  // Connect WiFi
-  WiFi.begin(ssid, pass);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("WiFi connected");
-
-  // Connect MQTT
-  mqttClient.setUsernamePassword(mqttUser, mqttPass);
-  if (!mqttClient.connect(broker, port)) {
-    Serial.print("MQTT connection failed, code = ");
-    Serial.println(mqttClient.connectError());
+  // --- Ensure WiFi connection ---
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Connecting to WiFi...");
     WiFi.disconnect();
-    LowPower.sleep(publishInterval * 1000);
-    return; // try again on next cycle
+    WiFi.begin(ssid, pass);
+
+    unsigned long startAttempt = millis();
+    while (WiFi.status() != WL_CONNECTED && millis() - startAttempt < 10000) { // 10s timeout
+      delay(500);
+      Serial.print(".");
+    }
+    if (WiFi.status() == WL_CONNECTED) {
+      Serial.println(" WiFi connected!");
+      Serial.print("IP: ");
+      Serial.println(WiFi.localIP());
+    } else {
+      Serial.println(" WiFi failed, going to sleep...");
+      WiFi.disconnect();
+      LowPower.sleep(publishInterval * 1000);
+      return;
+    }
   }
 
-  // Read DHT22
+  // --- Ensure MQTT connection ---
+  if (!mqttClient.connected()) {
+    mqttClient.setUsernamePassword(mqttUser, mqttPass);
+    Serial.println("Connecting to MQTT...");
+    if (!mqttClient.connect(broker, port)) {
+      Serial.print("MQTT failed, code = ");
+      Serial.println(mqttClient.connectError());
+      WiFi.disconnect();
+      LowPower.sleep(publishInterval * 1000);
+      return;
+    }
+    Serial.println("MQTT connected");
+  }
+
+  // --- Read DHT22 safely ---
   float h = dht.getHumidity();
   float t = dht.getTemperature();
 
-  if (!isnan(h) && !isnan(t)) {
-    String msg = "{";
-    msg += "\"time\": " + String(millis()) + ",";
-    msg += "\"temperature\": " + String(t, 1) + ",";
-    //msg += "\"humidity\": " + String(h, 1);
-    msg += "\"humidity\": " + String(h, 1) + ",";
-    msg += "\"pressure\": " + String(0); // Placeholder for pressure sensor
-    msg += "}";
-
-    mqttClient.beginMessage(topic);
-    mqttClient.print(msg);
-    mqttClient.endMessage();
-
-    Serial.print("Published: ");
-    Serial.println(msg);
-
-    // Flash LED once
-    digitalWrite(LEDPIN, HIGH);
-    delay(200);
-    digitalWrite(LEDPIN, LOW);
+  if (isnan(h) || isnan(t)) {
+    Serial.println("Sensor read error, skipping publish");
+    WiFi.disconnect();
+    LowPower.sleep(publishInterval * 1000);
+    return;
   }
 
+  // --- Build JSON message ---
+  String msg = "{";
+  msg += "\"time\": " + String(millis()) + ",";
+  msg += "\"temperature\": " + String(t, 1) + ",";
+  msg += "\"humidity\": " + String(h, 1) + ",";
+  msg += "\"pressure\": " + String(0); // placeholder
+  msg += "}";
+
+  // --- Publish ---
+  mqttClient.beginMessage(topic);
+  mqttClient.print(msg);
+  mqttClient.endMessage();
+
+  Serial.print("Published: ");
+  Serial.println(msg);
+
+  // --- Blink LED once ---
+  digitalWrite(LEDPIN, HIGH);
+  delay(200);
+  digitalWrite(LEDPIN, LOW);
+
+  // --- Disconnect to save power ---
   mqttClient.stop();
   WiFi.disconnect();
+  WiFi.end();
 
   Serial.println("Sleeping...");
-  LowPower.sleep(publishInterval * 1000);
+  //LowPower.idle(publishInterval * 1000); // Doesn't work reliably on MKR1000, maybe for ESP32
+  delay(publishInterval * 1000);
 }
-

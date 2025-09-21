@@ -1,8 +1,8 @@
 <link href="/css/style.css" rel="stylesheet" type="text/css">
 <script src="https://cdn.socket.io/4.4.0/socket.io.min.js" integrity="sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj" crossorigin="anonymous"></script>
 
-<h1>DHT Sensor Readings</h1>
-<a href="https://vincebel.tech">vincebel.tech</a>
+<h1>Weather Readings</h1>
+<a href="https://github.com/vincebel7/temperature-data-collector">Github</a>
 <hr>
 <div id="databox"></div>
 
@@ -11,11 +11,10 @@
 
 	socket.on('data-from-server', function (data) {
 		console.log(data);
-		//var str_data = JSON.stringify(data);
 		var json_data = JSON.parse(data);
 		console.log(json_data);
 		//var id = json_data.data[0].id;
-		var temperature = json_data['temperature'];
+		var temp_c = json_data['temperature'];
 		var humidity = json_data['humidity'];
 		var pressure = json_data['pressure'];
 		//var loc = json_data.data[0].location;
@@ -23,7 +22,8 @@
 		//var dt = json_data.data[0].date;
 		var time = json_data['time'];
 		//var ip = json_data.data[0].ip;
-		console.log(temperature)
+		var temp_f = (temp_c * 9/5) + 32;
+
 		const options = {
 			hour12: true,
 			hour: "2-digit",
@@ -33,7 +33,7 @@
 
 		var newtime = new Date(time).toLocaleTimeString("en-US",options);;
 
-		var message = newtime + ": TEMPERATURE " + temperature + ", HUMIDITY " + humidity + ", PRESSURE " + pressure;
+		var message = newtime + ": TEMPERATURE (F)" + temp_f + ", HUMIDITY " + humidity + "%, PRESSURE " + pressure;
 		var dataDiv = document.getElementById('databox');
 
 		dataDiv.appendChild( document.createElement("br") );

@@ -1,9 +1,9 @@
 h1 {
-	color: red;
+	color: green;
 	font-family: Verdana;
 }
 #databox{
-	background-color: #e6d6d6;
+	background-color: #8cdc97;
 	height: 800px;
 	max-width: 1000px;
 	overflow: scroll;

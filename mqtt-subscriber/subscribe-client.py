@@ -4,6 +4,7 @@ Author: vincebel7
 Purpose: Subscribes to the MQTT server and redirects messages to other services, such as Redis
 """
 
+from datetime import datetime
 import paho.mqtt.client as mqtt
 import time
 import redis
@@ -50,6 +51,9 @@ def on_subscribe(mqtt_client, userdata, message, idk):
 def on_message(mqtt_client, userdata, message_str):
     payload = message_str.payload.decode('utf8')
     jsonload = json.loads(payload)
+    # Add a server-side timestamp
+    jsonload['time'] = datetime.now(datetime.utc).isoformat() + "Z"   # ISO 8601 in UTC
+
     jsondump = json.dumps(jsonload)
     
     print("Data received: " + jsondump)
