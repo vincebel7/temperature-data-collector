@@ -22,7 +22,6 @@
 		//var dt = json_data.data[0].date;
 		var time = json_data['time'];
 		//var ip = json_data.data[0].ip;
-		var temp_f = (temp_c * 9/5) + 32;
 
 		const options = {
 			hour12: true,
@@ -32,8 +31,10 @@
 		};
 
 		var newtime = new Date(time).toLocaleTimeString("en-US",options);;
+		var temp_f = ((temp_c * 9/5) + 32).toFixed(1);
+		var humidity_fmt = Number(humidity).toFixed(1);
 
-		var message = newtime + ": TEMPERATURE (F)" + temp_f + ", HUMIDITY " + humidity + "%, PRESSURE " + pressure;
+		var message = newtime + ": TEMPERATURE " + temp_f + "° F, HUMIDITY " + humidity_fmt + "%, PRESSURE " + pressure;
 		var dataDiv = document.getElementById('databox');
 
 		dataDiv.appendChild( document.createElement("br") );
